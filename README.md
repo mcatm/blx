@@ -13,10 +13,10 @@
 
 #### Method
 
-load
-add_task
-remove_task
-do_task
+-load
+-add_task
+-remove_task
+-do_task
 
 ### URI
 
@@ -24,8 +24,8 @@ do_task
 
 #### Property
 
-**segment**: (Array) seperated uri
-**uri_string**: (String) query string
+-**segment**: (Array) seperated uri
+-**uri_string**: (String) query string
 
 #### Method
 
