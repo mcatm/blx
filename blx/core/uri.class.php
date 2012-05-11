@@ -15,6 +15,14 @@ class Uri {
 		return $this->segment[$num];
 	}
 	
+	public function set_mode() {
+		$mode = 'normal';
+		
+		if (defined('ADMIN_ROOT') && $this->get() === ADMIN_ROOT) $mode = 'admin';
+		
+		define('MODE', $mode);
+	}
+	
 	public function test($num = 0) {
 		echo $this->get($num);
 	}
