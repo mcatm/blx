@@ -2,17 +2,22 @@
 
 define('SYSTEM_PATH', dirname(__FILE__).'/');// define system path
 
+define('CACHE_PATH', SYSTEM_PATH.'cache/');// define cache path
+define('LOG_PATH', SYSTEM_PATH.'log/');// define log path
+
 require_once(SYSTEM_PATH.'core/blx.class.php');// load core
 
 $blx = new Blx();
 
-//URIの処理
-$blx->add_task('init', 'load', 'uri');
-$blx->add_task('init', array('uri', 'set_mode'));
-$blx->add_task('output', array('uri', 'test'), '1');
+if (!empty($cfg['autoload']['module'])) {
+	foreach($cfg['autoload']['module'] as $v) $blx->add_task('load_'.$v, 'init', 'load', $v);
+}
 
-//出力の処理
-$blx->add_task('init', 'load', 'output');
+if (!empty($cfg['autoload']['function'])) {
+	foreach($cfg['autoload']['function'] as $v) $blx->add_function($v);
+}
+
+$blx->add_task('test', 'output', array('log', 'set'), get_random_string(64));
 
 /* ----------------------------------------------------------
 	
@@ -21,17 +26,15 @@ $blx->add_task('init', 'load', 'output');
 ---------------------------------------------------------- */
 
 $blx->do_task('init');
-
-if ('admin' === MODE) {
-	$blx->load('admin');
-	$blx->add_task('admin_init', array('admin', 'init'));
-}
-
 $blx->do_task('output');
 
-exit(MODE);
+/* ----------------------------------------------------------
+	
+	Debug
+	
+---------------------------------------------------------- */
 
-#echo '<pre>';
-#print_r($blx);
-#echo '</pre>';
+echo '<pre>';
+print_r($blx);
+echo '</pre>';
 ?>

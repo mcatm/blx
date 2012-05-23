@@ -32,3 +32,5 @@
 # Tasks
 
 - init
+- session management
+- cache / log management (file generate)

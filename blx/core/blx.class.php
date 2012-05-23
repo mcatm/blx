@@ -9,6 +9,7 @@
 class Blx {
 	
 	var $task;
+	var $function = array();
 	
 	// すべてのモジュールは、blxのオブジェクトとして生成される
 	public function load($class) {
@@ -27,10 +28,24 @@ class Blx {
 		}
 	}
 	
+	public function add_function($function) {
+		if (is_readable(SITE_PATH.'function/'.$function.'.php')) {
+			$filepath = SITE_PATH.'function/'.$function.'.php';
+		} elseif (!$filepath && is_readable(SYSTEM_PATH.'function/'.$function.'.php')) {
+			$filepath = SYSTEM_PATH.'function/'.$function.'.php';
+		}
+		
+		if (isset($filepath) && !in_array($function, $this->function)) {
+			$this->function[] = $function;
+			require_once($filepath);
+		}
+	}
+	
 	/* ----------------------------------------------------------
 		
 		add_task
 		
+		@handle : identify key
 		@key : action_key
 		@callback : function name (if it's array, 1st arg is class name)
 		@arg : argument
@@ -38,8 +53,9 @@ class Blx {
 	
 	---------------------------------------------------------- */
 	
-	public function add_task($key, $callback, $arg = array(), $order = 0) {
+	public function add_task($handle, $key, $callback, $arg = array(), $order = 0) {
 		$this->task[$key][] = array(
+			'handle'		=> $handle,
 			'callback'	=> $callback,
 			'arg'			=> $arg,
 			'order'		=> $order
